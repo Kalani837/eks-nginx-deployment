@@ -36,7 +36,4 @@ jobs:
           aws eks update-kubeconfig --name nginx-ec2-cluster --region ap-south-1
           kubectl apply -f nginx-deployment.yaml
           kubectl apply -f nginx-service.yaml
-    ```
-
-* **Replace `v1.28.0`:**
-    * Replace `v1.28.0` with the actual Kubernetes version of your `nginx-ec2-cluster`.
+      

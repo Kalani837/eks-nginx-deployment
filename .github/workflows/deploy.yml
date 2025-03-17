@@ -1,0 +1,42 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.30.10-eks-bc803b4' # Replace with your EKS cluster's Kubernetes version
+
+      - name: Decode kubeconfig
+        run: echo "${{ secrets.KUBE_CONFIG_BASE64 }}" | base64 -d > kubeconfig
+
+      - name: Set kubeconfig
+        run: export KUBECONFIG=$(pwd)/kubeconfig
+
+      - name: Deploy to EKS
+        run: |
+          aws eks update-kubeconfig --name nginx-ec2-cluster --region ap-south-1
+          kubectl apply -f nginx-deployment.yaml
+          kubectl apply -f nginx-service.yaml
+    ```
+
+* **Replace `v1.28.0`:**
+    * Replace `v1.28.0` with the actual Kubernetes version of your `nginx-ec2-cluster`.

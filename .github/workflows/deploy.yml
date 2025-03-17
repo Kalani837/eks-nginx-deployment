@@ -23,6 +23,11 @@ jobs:
       - name: Download kubectl
         run: curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.30.10-eks-bc803b4/bin/linux/amd64/kubectl"
              chmod +x kubectl
+      - name: Test Network Connectivity
+        run: ping google.com -c 4
+
+      - name: Check DNS Settings
+        run: cat /etc/resolv.conf
 
       - name: Move kubectl to PATH
         run: sudo mv kubectl /usr/local/bin/

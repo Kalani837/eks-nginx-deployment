@@ -20,11 +20,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'v1.30.10-eks-bc803b4' # Replace with your EKS cluster's Kubernetes version
-          architecture: 'x64' # or 'x86_64'
+      - name: Download kubectl
+        run: curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.30.10-eks-bc803b4/bin/linux/amd64/kubectl"
+             chmod +x kubectl
+
+      - name: Move kubectl to PATH
+        run: sudo mv kubectl /usr/local/bin/
 
       - name: Decode kubeconfig
         run: echo "${{ secrets.KUBE_CONFIG_BASE64 }}" | base64 -d > kubeconfig

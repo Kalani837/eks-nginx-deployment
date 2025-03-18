@@ -3,7 +3,7 @@ name: Deploy to EKS
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
@@ -24,6 +24,12 @@ jobs:
         run: |
           curl -LO "https://github.com/kubernetes/kubernetes/releases/download/v1.30.10-eks-bc803b4/kubectl"
           chmod +x kubectl
+          if [ -s kubectl ]; then
+            echo "kubectl download successful"
+          else
+            echo "kubectl download failed"
+            exit 1
+          fi
 
       - name: Test Network Connectivity
         run: ping google.com -c 4
